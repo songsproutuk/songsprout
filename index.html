@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SongSprout — Custom songs starring your child</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Titan+One&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#2D2A6E;
+    --indigo-deep:#1F1C52;
+    --sun:#FFC93C;
+    --coral:#FF6B8A;
+    --sky:#5BC0EB;
+    --mint:#5FD39A;
+    --grape:#9B72D8;
+    --paper:#FFF8ED;
+    --ink:#26243F;
+    --radius:24px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    font-family:'Nunito',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  h1,h2,h3,.blank,.btn,.genre-chip,.step-num,.logo,.genre-pick label{font-family:'Baloo 2','Arial Rounded MT Bold',ui-rounded,'Nunito',Verdana,sans-serif}
+
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+  /* ---------- Header ---------- */
+  header{
+    background:var(--indigo);
+    color:var(--paper);
+    padding:14px 0;
+  }
+  header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Titan One','Arial Rounded MT Bold',ui-rounded,Verdana,sans-serif;
+    font-size:1.55rem;letter-spacing:.5px;
+    text-decoration:none;color:var(--paper);
+    text-shadow:0 3px 0 rgba(0,0,0,.25);
+  }
+  .logo svg{flex:none}
+  .logo .accent{color:var(--sun)}
+  header a.btn{padding:10px 18px;font-size:.95rem}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:var(--indigo);
+    color:var(--paper);
+    padding:64px 0 96px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{position:relative;z-index:2}
+  /* floating music notes */
+  .note{
+    position:absolute;
+    font-size:1.6rem;
+    opacity:.35;
+    animation:floaty 7s ease-in-out infinite;
+    user-select:none;
+    pointer-events:none;
+  }
+  .note.n1{top:12%;left:6%;color:var(--sun);animation-delay:0s}
+  .note.n2{top:64%;left:12%;color:var(--coral);font-size:2.1rem;animation-delay:1.2s}
+  .note.n3{top:20%;right:8%;color:var(--sky);font-size:2.4rem;animation-delay:.6s}
+  .note.n4{top:70%;right:14%;color:var(--mint);animation-delay:2s}
+  .note.n5{top:42%;right:30%;color:var(--grape);font-size:1.3rem;animation-delay:2.8s}
+  @keyframes floaty{
+    0%,100%{transform:translateY(0) rotate(-6deg)}
+    50%{transform:translateY(-18px) rotate(8deg)}
+  }
+  .hero::after{
+    content:"";
+    position:absolute;left:0;right:0;bottom:-2px;height:48px;z-index:1;
+    background:var(--paper);
+    clip-path:polygon(0 60%,4% 30%,8% 65%,12% 25%,16% 70%,20% 35%,24% 60%,28% 20%,32% 65%,36% 40%,40% 70%,44% 25%,48% 60%,52% 30%,56% 68%,60% 22%,64% 62%,68% 38%,72% 70%,76% 28%,80% 60%,84% 32%,88% 66%,92% 24%,96% 62%,100% 40%,100% 100%,0 100%);
+  }
+  .hero h1{
+    font-size:clamp(1.9rem,5.6vw,3.2rem);
+    font-weight:700;
+    line-height:1.35;
+    max-width:840px;
+  }
+  .blank{
+    display:inline-block;
+    background:var(--paper);
+    color:var(--indigo);
+    border-radius:14px;
+    padding:0 16px;
+    min-width:120px;
+    text-align:center;
+    border-bottom:5px solid var(--sun);
+    transform:rotate(-1.5deg);
+    transition:opacity .3s;
+  }
+  .blank.pink{border-bottom-color:var(--coral);transform:rotate(1.5deg)}
+  .blank.blue{border-bottom-color:var(--sky);transform:rotate(-1deg)}
+  .hero p.sub{
+    margin-top:22px;
+    font-size:1.15rem;
+    max-width:600px;
+    opacity:.92;
+  }
+  .hero .cta-row{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;
+    background:var(--sun);
+    color:var(--indigo-deep);
+    font-weight:700;
+    font-size:1.05rem;
+    padding:14px 28px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    text-decoration:none;
+    box-shadow:0 4px 0 rgba(0,0,0,.18);
+    transition:transform .15s;
+  }
+  .btn:hover{transform:scale(1.05) rotate(-1deg)}
+  .btn:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+  .btn.ghost{background:transparent;color:var(--paper);border:3px solid var(--paper);box-shadow:none}
+
+  /* ---------- Sections ---------- */
+  section{padding:64px 0}
+  h2{
+    font-size:clamp(1.6rem,4vw,2.3rem);
+    font-weight:700;
+    color:var(--indigo);
+    margin-bottom:14px;
+    display:inline-block;
+    position:relative;
+  }
+  /* crayon squiggle underline */
+  h2::after{
+    content:"";
+    display:block;
+    height:10px;
+    margin-top:2px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='10' viewBox='0 0 120 10'><path d='M2 6 Q12 1 22 6 T42 6 T62 6 T82 6 T102 6 T118 6' fill='none' stroke='%23FF6B8A' stroke-width='4' stroke-linecap='round'/></svg>") repeat-x left center;
+    background-size:120px 10px;
+  }
+  .kicker{
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:.8rem;
+    color:var(--grape);
+    margin-bottom:8px;
+  }
+
+  /* How it works */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:34px}
+  .step{
+    background:#fff;
+    border-radius:var(--radius);
+    padding:28px 22px;
+    box-shadow:0 5px 0 rgba(45,42,110,.14);
+    transition:transform .2s;
+  }
+  .step:nth-child(1){transform:rotate(-1deg)}
+  .step:nth-child(3){transform:rotate(1deg)}
+  .step:hover{transform:rotate(0) translateY(-4px)}
+  .step-num{
+    width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:1.5rem;color:var(--indigo-deep);
+    margin-bottom:14px;
+    box-shadow:0 3px 0 rgba(0,0,0,.12);
+  }
+  .step:nth-child(1) .step-num{background:var(--sun)}
+  .step:nth-child(2) .step-num{background:var(--sky)}
+  .step:nth-child(3) .step-num{background:var(--mint)}
+  .step h3{font-size:1.25rem;color:var(--indigo);margin-bottom:6px}
+  .step .doodle{font-size:1.6rem;float:right}
+
+  /* Genres */
+  .genres{background:#FDEFD2}
+  .genre-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+  .genre-chip{
+    background:#fff;
+    border:3px solid var(--indigo);
+    color:var(--indigo);
+    border-radius:999px;
+    padding:10px 20px;
+    font-weight:700;
+    font-size:1.05rem;
+    box-shadow:0 3px 0 rgba(45,42,110,.2);
+  }
+  .genre-chip em{font-style:normal;margin-right:7px}
+  .genre-chip:nth-child(odd){transform:rotate(-2deg)}
+  .genre-chip:nth-child(even){transform:rotate(2deg)}
+  .genre-chip:nth-child(3n){border-color:var(--coral);color:var(--coral)}
+  .genre-chip:nth-child(4n){border-color:var(--sky);color:#1d7ea8}
+  .genre-chip:nth-child(5n){border-color:var(--mint);color:#1f8a58}
+
+  /* ---------- Order form ---------- */
+  .order{background:var(--paper)}
+  .builder{
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:0 6px 0 rgba(45,42,110,.16);
+    border:3px dashed var(--sun);
+    padding:34px 28px;
+    margin-top:30px;
+    position:relative;
+  }
+  .builder p.lede{font-size:1.05rem;margin-bottom:24px}
+  .field{margin-bottom:22px}
+  label{
+    display:block;
+    font-weight:800;
+    font-size:.85rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--indigo);
+    margin-bottom:8px;
+  }
+  label small{display:block;text-transform:none;letter-spacing:0;font-weight:600;color:#7a7794;font-size:.85rem}
+  input[type=text],input[type=email],textarea,select{
+    width:100%;
+    font-family:'Nunito',sans-serif;
+    font-size:1rem;
+    padding:13px 15px;
+    border:3px solid #E8E0CC;
+    border-radius:16px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--grape);background:#fff}
+  textarea{min-height:96px;resize:vertical}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:560px){.two-col{grid-template-columns:1fr}}
+
+  .genre-pick{display:flex;flex-wrap:wrap;gap:10px}
+  .genre-pick input{position:absolute;opacity:0;pointer-events:none}
+  .genre-pick label{
+    font-weight:700;font-size:1rem;text-transform:none;letter-spacing:0;
+    border:3px solid var(--indigo);color:var(--indigo);background:#fff;
+    border-radius:999px;padding:9px 18px;cursor:pointer;margin:0;
+    transition:background .15s,color .15s,transform .15s;
+  }
+  .genre-pick label:hover{transform:scale(1.05)}
+  .genre-pick input:checked + label{background:var(--indigo);color:#fff;transform:rotate(-2deg)}
+  .genre-pick input:focus-visible + label{outline:3px solid var(--sky);outline-offset:2px}
+
+  .builder .btn{width:100%;margin-top:6px;font-size:1.2rem;padding:16px}
+
+  /* Confirmation card */
+  .brief{
+    display:none;
+    background:var(--indigo);
+    color:var(--paper);
+    border-radius:var(--radius);
+    padding:30px 26px;
+    margin-top:26px;
+  }
+  .brief.show{display:block}
+  .brief h3{font-family:'Baloo 2','Arial Rounded MT Bold',ui-rounded,'Nunito',Verdana,sans-serif;color:var(--sun);margin-bottom:10px;font-size:1.4rem}
+  .brief pre{
+    white-space:pre-wrap;
+    font-family:'Nunito',sans-serif;
+    font-size:.98rem;
+    background:rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:18px;
+    margin:14px 0 18px;
+  }
+  .brief .btn{width:auto}
+
+  /* Confetti */
+  .confetti{
+    position:fixed;
+    top:-12px;
+    font-size:1.1rem;
+    z-index:99;
+    pointer-events:none;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{transform:translateY(105vh) rotate(720deg);opacity:.8}
+  }
+
+  footer{
+    background:var(--indigo-deep);
+    color:rgba(255,248,237,.75);
+    padding:28px 0;
+    font-size:.9rem;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="SongSprout home">
+      <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
+        <!-- pot -->
+        <path d="M14 34 h20 l-3 10 h-14 z" fill="#FF6B8A"/>
+        <!-- stem -->
+        <path d="M24 34 C24 26 24 22 24 18" stroke="#5FD39A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- leaves -->
+        <path d="M24 26 C18 26 15 22 15 18 C20 18 24 21 24 26 Z" fill="#5FD39A"/>
+        <path d="M24 22 C30 22 33 18 33 14 C28 14 24 17 24 22 Z" fill="#7BD8A8"/>
+        <!-- music note bloom -->
+        <circle cx="21" cy="12" r="3.4" fill="#FFC93C"/>
+        <rect x="23.6" y="3" width="2.6" height="9.6" rx="1.3" fill="#FFC93C"/>
+        <path d="M26.2 3 C29 3.6 31 5 31.5 7 C29.5 6.4 27.7 6 26.2 6 Z" fill="#FFC93C"/>
+      </svg>
+      <span>Song<span class="accent">Sprout</span></span>
+    </a>
+    <a class="btn" href="#order">Start a song</a>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="note n1">♪</span>
+  <span class="note n2">♫</span>
+  <span class="note n3">♩</span>
+  <span class="note n4">♪</span>
+  <span class="note n5">♬</span>
+  <div class="wrap">
+    <h1>
+      A real song about
+      <span class="blank" id="b-name">Ivy</span>,
+      who loves
+      <span class="blank pink" id="b-love">dinosaurs</span>,
+      starring
+      <span class="blank blue" id="b-star">Grandad Pete</span>.
+    </h1>
+    <p class="sub">Tell us about your child — their name, the people and characters they adore, and the style they'd love. We write and produce a proper, catchy track just for them, delivered straight to you.</p>
+    <div class="cta-row">
+      <a class="btn" href="#order">Build their song 🎵</a>
+      <a class="btn ghost" href="#how">How it works</a>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2>Three steps to their favourite song ever</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="doodle">✏️</span>
+        <div class="step-num">1</div>
+        <h3>Tell us their story</h3>
+        <p>Fill in the song builder below — their name, age, the special people, pets and characters in their world, and any inside jokes.</p>
+      </div>
+      <div class="step">
+        <span class="doodle">🎧</span>
+        <div class="step-num">2</div>
+        <h3>We make the track</h3>
+        <p>We write the lyrics and produce a full, studio-quality song in the style you pick — pop, rap, lullaby, you name it.</p>
+      </div>
+      <div class="step">
+        <span class="doodle">💃</span>
+        <div class="step-num">3</div>
+        <h3>Press play together</h3>
+        <p>Your finished song lands in your inbox within a few days, ready to play on repeat in the car, at bedtime, or at the party.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="genres">
+  <div class="wrap">
+    <div class="kicker">Pick a vibe</div>
+    <h2>Any style they're into</h2>
+    <p>Every child has a sound. Choose the one that will make them light up:</p>
+    <div class="genre-row">
+      <div class="genre-chip"><em>🎤</em>Rap</div>
+      <div class="genre-chip"><em>🌟</em>Pop</div>
+      <div class="genre-chip"><em>🎸</em>Rock</div>
+      <div class="genre-chip"><em>🌙</em>Lullaby</div>
+      <div class="genre-chip"><em>🤠</em>Country</div>
+      <div class="genre-chip"><em>🕺</em>Disco</div>
+      <div class="genre-chip"><em>🏴‍☠️</em>Sea shanty</div>
+      <div class="genre-chip"><em>🎻</em>Musical theatre</div>
+    </div>
+  </div>
+</section>
+
+<section class="order" id="order">
+  <div class="wrap">
+    <div class="kicker">The song builder</div>
+    <h2>Tell us about your little star</h2>
+
+    <div class="builder">
+      <p class="lede">The more you share, the more magical the song. Nothing is too small — a wobbly tooth, a beloved teddy, a catchphrase.</p>
+
+      <form id="songForm" novalidate>
+        <div class="two-col">
+          <div class="field">
+            <label for="childName">Child's name<small>Exactly how it should be sung</small></label>
+            <input type="text" id="childName" name="childName" required placeholder="e.g. Ivy">
+          </div>
+          <div class="field">
+            <label for="childAge">Age</label>
+            <input type="text" id="childAge" name="childAge" placeholder="e.g. 5">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="occasion">What's the song for?<small>Birthday, bedtime, potty training, starting school, just because…</small></label>
+          <input type="text" id="occasion" name="occasion" placeholder="e.g. 6th birthday party">
+        </div>
+
+        <div class="field">
+          <label for="people">Special people &amp; characters<small>Family, friends, pets, favourite characters — who should get a mention?</small></label>
+          <textarea id="people" name="people" placeholder="e.g. Grandad Pete, baby sister Rosie, our dog Biscuit, Spider-Man"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Pick a style</label>
+          <div class="genre-pick" role="radiogroup" aria-label="Song style">
+            <span><input type="radio" name="genre" id="g1" value="Pop" checked><label for="g1">🌟 Pop</label></span>
+            <span><input type="radio" name="genre" id="g2" value="Rap"><label for="g2">🎤 Rap</label></span>
+            <span><input type="radio" name="genre" id="g3" value="Rock"><label for="g3">🎸 Rock</label></span>
+            <span><input type="radio" name="genre" id="g4" value="Lullaby"><label for="g4">🌙 Lullaby</label></span>
+            <span><input type="radio" name="genre" id="g5" value="Country"><label for="g5">🤠 Country</label></span>
+            <span><input type="radio" name="genre" id="g6" value="Disco"><label for="g6">🕺 Disco</label></span>
+            <span><input type="radio" name="genre" id="g7" value="Sea shanty"><label for="g7">🏴‍☠️ Sea shanty</label></span>
+            <span><input type="radio" name="genre" id="g8" value="Surprise me"><label for="g8">🎁 Surprise me!</label></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="extras">Any extras?<small>Favourite things, inside jokes, words they say, things to avoid</small></label>
+          <textarea id="extras" name="extras" placeholder="e.g. Obsessed with dinosaurs. Says 'easy peasy lemon squeezy' constantly. Please no mention of broccoli."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="email">Your email<small>Where we'll send the finished song</small></label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+
+        <button class="btn" type="submit">Create my song brief ✨</button>
+      </form>
+
+      <div class="brief" id="brief" aria-live="polite">
+        <h3>Your song brief is ready! 🎶</h3>
+        <p>Here's everything we'll use to write the track:</p>
+        <pre id="briefText"></pre>
+        <a class="btn" id="mailBtn" href="#">Send it to us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">SongSprout · Handmade custom songs for children · Made in the UK</div>
+</footer>
+
+<script>
+// Rotating hero examples
+const examples = [
+  ["Ivy","dinosaurs","Grandad Pete"],
+  ["Noah","fire engines","his dog Biscuit"],
+  ["Amara","mermaids","Auntie Jess"],
+  ["Freddie","football","Spider-Man"],
+  ["Poppy","space rockets","her twin, Max"]
+];
+let ex = 0;
+const bName = document.getElementById('b-name');
+const bLove = document.getElementById('b-love');
+const bStar = document.getElementById('b-star');
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reduced){
+  setInterval(()=>{
+    ex = (ex+1) % examples.length;
+    [bName,bLove,bStar].forEach(el=>el.style.opacity=0);
+    setTimeout(()=>{
+      bName.textContent = examples[ex][0];
+      bLove.textContent = examples[ex][1];
+      bStar.textContent = examples[ex][2];
+      [bName,bLove,bStar].forEach(el=>el.style.opacity=1);
+    },300);
+  },3500);
+}
+
+// Confetti burst
+function confetti(){
+  if(reduced) return;
+  const bits = ["🎵","🎶","⭐","🎉","💛","🩷","💙"];
+  for(let i=0;i<28;i++){
+    const s = document.createElement('span');
+    s.className = 'confetti';
+    s.textContent = bits[Math.floor(Math.random()*bits.length)];
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.animationDuration = (2.2 + Math.random()*2) + 's';
+    s.style.animationDelay = (Math.random()*0.4) + 's';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 5000);
+  }
+}
+
+// Form -> brief summary + mailto
+const YOUR_EMAIL = "hello@songsprout.co.uk"; // ← change to your real inbox
+
+document.getElementById('songForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const f = new FormData(this);
+  const name = f.get('childName')?.trim();
+  const email = f.get('email')?.trim();
+  if(!name || !email){
+    alert("Please add your child's name and your email so we can send the song.");
+    return;
+  }
+  const lines = [
+    "SONG BRIEF — SongSprout",
+    "Child: " + name + (f.get('childAge') ? " (age " + f.get('childAge').trim() + ")" : ""),
+    "Occasion: " + (f.get('occasion')?.trim() || "—"),
+    "Special people & characters: " + (f.get('people')?.trim() || "—"),
+    "Style: " + f.get('genre'),
+    "Extras: " + (f.get('extras')?.trim() || "—"),
+    "Parent email: " + email
+  ];
+  const text = lines.join("\n");
+  document.getElementById('briefText').textContent = text;
+  const mail = document.getElementById('mailBtn');
+  mail.href = "mailto:" + YOUR_EMAIL
+    + "?subject=" + encodeURIComponent("New song order — " + name)
+    + "&body=" + encodeURIComponent(text);
+  const brief = document.getElementById('brief');
+  brief.classList.add('show');
+  confetti();
+  brief.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+});
+</script>
+
+</body>
+</html>
