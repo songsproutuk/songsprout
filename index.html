@@ -37,8 +37,8 @@
 
   /* ---------- Header ---------- */
   header{
-    background:var(--indigo);
-    color:var(--paper);
+    background:var(--paper);
+    border-bottom:3px solid #F0E7D2;
     padding:14px 0;
   }
   header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -46,11 +46,9 @@
     display:flex;align-items:center;gap:10px;
     font-family:'Titan One','Arial Rounded MT Bold',ui-rounded,Verdana,sans-serif;
     font-size:1.55rem;letter-spacing:.5px;
-    text-decoration:none;color:var(--paper);
-    text-shadow:0 3px 0 rgba(0,0,0,.25);
+    text-decoration:none;color:#2E7D4F;
   }
   .logo svg{flex:none}
-  .logo .accent{color:var(--sun)}
   header a.btn{padding:10px 18px;font-size:.95rem}
 
   /* ---------- Hero ---------- */
@@ -336,20 +334,20 @@
 <header>
   <div class="wrap">
     <a class="logo" href="#" aria-label="SongSprout home">
-      <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
-        <!-- pot -->
-        <path d="M14 34 h20 l-3 10 h-14 z" fill="#FF6B8A"/>
-        <!-- stem -->
-        <path d="M24 34 C24 26 24 22 24 18" stroke="#5FD39A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true">
+        <!-- sound-wave arcs -->
+        <path d="M12 30 A11 11 0 0 0 6 22" fill="none" stroke="#FF6B5E" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M13.5 35.5 A16 16 0 0 0 4.5 27.5" fill="none" stroke="#FFC93C" stroke-width="3.2" stroke-linecap="round"/>
+        <!-- note stem curving up -->
+        <path d="M25 37 C26.5 30 26.5 22 26 13" fill="none" stroke="#3E9B4F" stroke-width="3.4" stroke-linecap="round"/>
         <!-- leaves -->
-        <path d="M24 26 C18 26 15 22 15 18 C20 18 24 21 24 26 Z" fill="#5FD39A"/>
-        <path d="M24 22 C30 22 33 18 33 14 C28 14 24 17 24 22 Z" fill="#7BD8A8"/>
-        <!-- music note bloom -->
-        <circle cx="21" cy="12" r="3.4" fill="#FFC93C"/>
-        <rect x="23.6" y="3" width="2.6" height="9.6" rx="1.3" fill="#FFC93C"/>
-        <path d="M26.2 3 C29 3.6 31 5 31.5 7 C29.5 6.4 27.7 6 26.2 6 Z" fill="#FFC93C"/>
+        <path d="M26 14 C19 14 15 9.5 14.5 4.5 C21 5 25.5 9 26 14 Z" fill="#4CAF50"/>
+        <path d="M26 13 C32.5 12 36.5 7 36.5 2.5 C30.5 3.5 26.5 8 26 13 Z" fill="#8BC34A"/>
+        <!-- note head -->
+        <ellipse cx="21.5" cy="39" rx="7.2" ry="5.4" fill="#4CAF50" transform="rotate(-18 21.5 39)"/>
+        <ellipse cx="19.5" cy="37.5" rx="2.4" ry="1.5" fill="#C8E6C9" transform="rotate(-18 19.5 37.5)"/>
       </svg>
-      <span>Song<span class="accent">Sprout</span></span>
+      <span>SongSprout</span>
     </a>
     <a class="btn" href="#order">Start a song</a>
   </div>
@@ -480,8 +478,8 @@
     <div class="builder">
       <p class="lede">The more you share, the more magical the song. Nothing is too small — a wobbly tooth, a beloved teddy, a catchphrase.</p>
 
-      <form id="songForm" name="song-order" method="POST" data-netlify="true" novalidate>
-        <input type="hidden" name="form-name" value="song-order">
+      <form id="songForm" name="song-order" action="https://formspree.io/f/mqpzpedg" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="New SongSprout order">
         <div class="two-col">
           <div class="field">
             <label for="childName">Child's name<small>Exactly how it should be sung</small></label>
@@ -617,11 +615,11 @@ document.getElementById('songForm').addEventListener('submit', function(e){
   const brief = document.getElementById('brief');
   const briefHead = brief.querySelector('h3');
 
-  // Send to Netlify Forms (works once deployed); fall back to mailto locally
-  fetch('/', {
+  // Send to Formspree; fall back to mailto if it fails
+  fetch('https://formspree.io/f/mqpzpedg', {
     method: 'POST',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: new URLSearchParams(f).toString()
+    headers: {'Accept': 'application/json'},
+    body: f
   }).then(function(res){
     if(res.ok){
       briefHead.textContent = "Your order is in! 🎶";
