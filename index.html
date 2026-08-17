@@ -385,7 +385,7 @@
         <span class="doodle">✏️</span>
         <div class="step-num">1</div>
         <h3>Tell us their story</h3>
-        <p>Fill in the song builder below — their name, age, the special people, pets and characters in their world, and any inside jokes.</p>
+        <p>Fill in the song builder below — their name, age, the special people, pets and characters in their world. We'll email you a payment link within 24 hours.</p>
       </div>
       <div class="step">
         <span class="doodle">🎧</span>
@@ -463,8 +463,8 @@
         <li>Any style — pop, rap, lullaby, sea shanty &amp; more</li>
         <li>Delivered to your inbox in 3–5 days, yours to keep forever</li>
       </ul>
-      <a class="btn" href="https://buy.stripe.com/aFabJ2921bNB3KB7GNejK00">Order now — £19.99 🎵</a>
-      <p style="margin-top:14px;font-size:.95rem;opacity:.85">Secure checkout — card, Apple Pay &amp; more. After paying you'll tell us all about your little star.</p>
+      <a class="btn" href="#order">Start your song 🎵</a>
+      <p style="margin-top:14px;font-size:.95rem;opacity:.85">Tell us about your child first — we'll email you a secure payment link within 24 hours.</p>
       <!-- Update this number by hand as orders come in -->
       <p class="spots">Only <span id="spotsLeft">25</span> founding spots left!</p>
     </div>
@@ -477,7 +477,7 @@
     <h2>Tell us about your little star</h2>
 
     <div class="builder">
-      <p class="lede">The more you share, the more magical the song. Nothing is too small — a wobbly tooth, a beloved teddy, a catchphrase. <strong>Already ordered? Fill this in and we'll get started.</strong></p>
+      <p class="lede">The more you share, the more magical the song. Nothing is too small — a wobbly tooth, a beloved teddy, a catchphrase. <strong>No payment yet</strong> — send us the details and we'll email you a secure payment link within 24 hours.</p>
 
       <form id="songForm" name="song-order" action="https://formspree.io/f/mqpzpedg" method="POST" novalidate>
         <input type="hidden" name="_subject" value="New SongSprout order">
@@ -526,12 +526,12 @@
           <input type="email" id="email" name="email" required placeholder="you@example.com">
         </div>
 
-        <button class="btn" type="submit">Create my song brief ✨</button>
+        <button class="btn" type="submit">Send my song details ✨</button>
       </form>
 
       <div class="brief" id="brief" aria-live="polite">
         <h3>Your song brief is ready! 🎶</h3>
-        <p>Here's everything we'll use to write the track:</p>
+        <p>We'll email you a secure payment link within 24 hours, then get straight to work. Here's what you told us:</p>
         <pre id="briefText"></pre>
         <a class="btn" id="mailBtn" href="#">Send it to us</a>
       </div>
@@ -623,7 +623,7 @@ document.getElementById('songForm').addEventListener('submit', function(e){
     body: f
   }).then(function(res){
     if(res.ok){
-      briefHead.textContent = "Your order is in! 🎶";
+      briefHead.textContent = "Got it! We'll be in touch within 24 hours 🎶";
       mail.style.display = 'none';
     }else{
       mail.style.display = '';
