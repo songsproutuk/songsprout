@@ -385,7 +385,7 @@
         <span class="doodle">✏️</span>
         <div class="step-num">1</div>
         <h3>Tell us their story</h3>
-        <p>Fill in the song builder below — their name, age, the special people, pets and characters in their world. We'll email you a payment link within 24 hours.</p>
+        <p>Fill in the song builder below — their name, age, the special people, pets and characters in their world — then pay securely.</p>
       </div>
       <div class="step">
         <span class="doodle">🎧</span>
@@ -464,7 +464,7 @@
         <li>Delivered to your inbox in 3–5 days, yours to keep forever</li>
       </ul>
       <a class="btn" href="#order">Start your song 🎵</a>
-      <p style="margin-top:14px;font-size:.95rem;opacity:.85">Tell us about your child first — we'll email you a secure payment link within 24 hours.</p>
+      <p style="margin-top:14px;font-size:.95rem;opacity:.85">Tell us about your child, then pay securely — card, Apple Pay &amp; more.</p>
       <!-- Update this number by hand as orders come in -->
       <p class="spots">Only <span id="spotsLeft">25</span> founding spots left!</p>
     </div>
@@ -477,7 +477,7 @@
     <h2>Tell us about your little star</h2>
 
     <div class="builder">
-      <p class="lede">The more you share, the more magical the song. Nothing is too small — a wobbly tooth, a beloved teddy, a catchphrase. <strong>No payment yet</strong> — send us the details and we'll email you a secure payment link within 24 hours.</p>
+      <p class="lede">The more you share, the more magical the song. Nothing is too small — a wobbly tooth, a beloved teddy, a catchphrase. You'll pay on the next step.</p>
 
       <form id="songForm" name="song-order" action="https://formspree.io/f/mqpzpedg" method="POST" novalidate>
         <input type="hidden" name="_subject" value="New SongSprout order">
@@ -531,9 +531,10 @@
 
       <div class="brief" id="brief" aria-live="polite">
         <h3>Your song brief is ready! 🎶</h3>
-        <p>We'll email you a secure payment link within 24 hours, then get straight to work. Here's what you told us:</p>
+        <p>Last step — secure your song below and we'll get straight to work. Here's what you told us:</p>
         <pre id="briefText"></pre>
-        <a class="btn" id="mailBtn" href="#">Send it to us</a>
+        <a class="btn" id="payBtn" href="https://buy.stripe.com/aFabJ2921bNB3KB7GNejK00">Pay £19.99 &amp; confirm 🎵</a>
+        <p style="margin-top:14px;font-size:.92rem;opacity:.8">Card, Apple Pay &amp; more. Rather pay later? <a href="#" id="mailBtn" style="color:var(--sun)">Email us instead</a> and we'll send a link.</p>
       </div>
     </div>
   </div>
@@ -616,20 +617,13 @@ document.getElementById('songForm').addEventListener('submit', function(e){
   const brief = document.getElementById('brief');
   const briefHead = brief.querySelector('h3');
 
-  // Send to Formspree; fall back to mailto if it fails
+  // Send the brief to Formspree, then show the pay button either way
   fetch('https://formspree.io/f/mqpzpedg', {
     method: 'POST',
     headers: {'Accept': 'application/json'},
     body: f
-  }).then(function(res){
-    if(res.ok){
-      briefHead.textContent = "Got it! We'll be in touch within 24 hours 🎶";
-      mail.style.display = 'none';
-    }else{
-      mail.style.display = '';
-    }
   }).catch(function(){
-    mail.style.display = '';
+    /* brief still shown; mailto fallback link is available */
   }).finally(function(){
     brief.classList.add('show');
     confetti();
