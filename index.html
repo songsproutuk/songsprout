@@ -299,9 +299,10 @@ footer a{color:var(--muted)}
         <div class="step" data-step="5" hidden>
           <p style="max-width:52ch;margin-bottom:10px">Here's the brief. Check it over, then pay securely — card, Apple Pay and more. We start writing the same day.</p>
           <p class="status" id="status"></p>
-          <a class="btn" id="payBtn" href="https://buy.stripe.com/aFabJ2921bNB3KB7GNejK00">Pay £19.99 &amp; confirm 🎵</a>
+          <a class="btn" id="payBtn" href="https://buy.stripe.com/aFabJ2921bNB3KB7GNejK00" hidden>Pay £19.99 &amp; confirm 🎵</a>
+          <button type="button" class="btn" id="retryBtn" hidden>Try saving again</button>
           <p class="hint" id="refLine"></p>
-          <p class="hint">Rather pay later? <a href="mailto:songsproutuk@gmail.com" id="mailBtn">Email us the brief instead</a> and we'll send a payment link.</p>
+          <p class="hint" id="mailLine">Rather pay later? <a href="mailto:songsproutuk@gmail.com" id="mailBtn">Email us the brief instead</a> and we'll send a payment link.</p>
         </div>
 
         <p class="err" id="err" hidden></p>
@@ -398,6 +399,12 @@ footer a{color:var(--muted)}
       : '';
     s.className = 'status' + (status === 'saved' ? ' ok' : status === 'error' ? ' bad' : '');
 
+    $('payBtn').hidden = status !== 'saved';
+    $('retryBtn').hidden = status !== 'error';
+    $('mailLine').innerHTML = status === 'error'
+      ? 'Or <a href="#" id="mailBtn">email us the brief</a> and we\'ll send you a payment link.'
+      : 'Rather pay later? <a href="#" id="mailBtn">Email us the brief instead</a> and we\'ll send a payment link.';
+
     var q = [];
     if(val('email')) q.push('prefilled_email=' + encodeURIComponent(val('email')));
     if(ref) q.push('client_reference_id=' + encodeURIComponent(ref));
@@ -455,6 +462,8 @@ footer a{color:var(--muted)}
       .then(function(r){ status = r.ok ? 'saved' : 'error'; render(); })
       .catch(function(){ status = 'error'; render(); });
   }
+
+  $('retryBtn').addEventListener('click', function(){ posted = ''; submitBrief(); });
 
   $('next').addEventListener('click', function(){
     var err = validate();
